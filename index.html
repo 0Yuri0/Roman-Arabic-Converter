@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de valores</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #6CA7F5;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        footer {
+            background-color: #345075;
+            text-align: center;
+            color: white;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            left: 0;
+            bottom: 0;
+        }
+        header {
+            background-color: #345075;
+            position: static;
+            color: white;
+            font-size: 15px;
+            text-align: center;
+            padding: 20px;
+        }
+        .meio {
+            padding: 20px;
+            font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        }
+        .conversor_arabico {
+            background-color: #345075;
+            color: white;
+            padding: 30px;
+            position:relative;
+            text-align: center;
+            border-radius: 15px;
+            margin: auto;
+            width: 35%;
+        }
+        .conversor_romano {
+            background-color: #345075;
+            color: white;
+            padding: 30px;
+            position:relative;
+            text-align: center;
+            border-radius: 15px;
+            margin: auto;
+            width: 35%;
+        }
+        .botao {
+            background-color: #6CA7F5;
+            border:none;
+            height: 25px;
+            width: 80px;
+            color: white;
+            margin: 3px;
+            cursor: pointer;
+        }
+        .botao:hover{
+            background-color: #345095;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>CONVERSOR DE NÚMEROS ARÁBICOS E ROMANOS</h1>
+    </header>
+    <div class="meio">
+        <div class="conversor_arabico">
+            <label>Algarismos Arábicos:</label>
+            <input type="number" id="arabico" min="1" max="3999">
+            <input type="button" id="btn2" value="CONVERTER" class="botao">
+            <p>Valor convertido: </p>
+            <p class="output2" id="output2">-</p>
+        </div>
+        <br>
+        <div class="conversor_romano">
+            <label>Algarismos Romanos:</label>
+            <input type="text" id="romano">
+            <input type="button" id="btn1" value="CONVERTER" class="botao">
+            <p>Valor convertido: </p>
+            <p class="output1" id="output1">-</p>
+        </div>
+    </div>
+    <footer>
+        <p>Desenvolvido por Yuri Marim</p>
+        <small>06/2023</small>
+    </footer>
+
+    <script>
+        //Variáveis e constantes - função conversor
+        const valores_romano = ['M','CM','D','CD','C','XC','L','XL','X','IX','V','IV','I'];
+        const valores_arabico = [1000,900,500,400,100,90,50,40,10,9,5,4,1];
+        let resultado_romano = '';
+        let resultado_arabico = 0;
+
+        function conversor(valor) {
+            if (typeof(valor) === 'number') { //Arábico para romano
+                for(let i = 0; i < 13; i++) {
+                    while (valor >= valores_arabico[i]) {
+                        resultado_romano = resultado_romano + valores_romano[i];
+                        valor = valor - valores_arabico[i];
+                    }
+                }
+                return resultado_romano;
+            }
+
+            if (typeof(valor) === 'string') { //Romano para arábico
+                valor = valor.toLocaleUpperCase(); //Tornar maiúsculo
+                let valores_array = [];
+
+                for(let i = 0; i < 13; i++) {
+                    for(let c = 0; c < valor.length; c++) {
+                        if (valor[c] === valores_romano[i]) {
+                            valores_array[c] = valores_arabico[i];
+                        }
+                    }
+                }
+
+                for(i = 0; i < valores_array.length - 1; i++) {
+                    if (valores_array[i] < valores_array[i+1]) {
+                        resultado_arabico = resultado_arabico - valores_array[i];
+                    } else {
+                        resultado_arabico = resultado_arabico + valores_array[i];
+                    }
+                }
+                resultado_arabico = resultado_arabico + valores_array[i];
+                return resultado_arabico;
+            }
+        }
+
+        //variáveis e constantes - função exibir
+        const txt1 = document.getElementById('romano');
+        const txt2 = document.getElementById('arabico');
+        const btn1 = document.getElementById('btn1');
+        const btn2 = document.getElementById('btn2');
+        const out1 = document.getElementById('output1');
+        const out2 = document.getElementById('output2');
+
+        function fun1() {
+            out1.innerHTML = conversor(txt1.value);
+            resultado_arabico = 0;
+        }
+
+        function fun2() {
+            out2.innerHTML = conversor(parseInt(txt2.value));
+            resultado_romano = '';
+        }
+
+        btn1.addEventListener('click', fun1);
+        btn2.addEventListener('click', fun2);
+    </script>
+</body>
+</html>
